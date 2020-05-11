@@ -22,6 +22,7 @@ def main():
     print('1 - Extrair Tweets e Realizar Análise Sentimental')   
     print('2 - Imprimir Tweets com Polaridade')   
     print('3 - Busca por Parâmetro')  
+    print('4 - Quantidade Total de Tweets')  
     print('0 - Sair')
 
     op = int(input('Informe a Opção: '))
@@ -41,11 +42,21 @@ def main():
        print_polarity_tweets_parameter(parameter)  
        print('\n')
        main() 
+    elif(op == 4):
+      print('\n\nQuantidade Total de Tweets: ' + str(count_tweets())) 
+      print('\n')
+      main() 
+    elif(op == 0):
+      exit
     else:
+        print('\nOpção Incorreta\n')
         main()
+        
 
 
 def insert_tweets(quant_loops, search_parameter):    
+
+    count = 0
 
     public_tweets = api.search(search_parameter)
 
@@ -63,6 +74,10 @@ def insert_tweets(quant_loops, search_parameter):
                 "polarity" : polarity
             })
 
+            count +=1
+
+    print('Quantidade de Tweets Gerado: ' + str(count))
+
 
 def print_polarity_tweets():
 
@@ -71,14 +86,31 @@ def print_polarity_tweets():
         print('Parâmetro de Busca: ' +  str(tweet['parameter'])) 
         print('Tweet: ' +  str(tweet['tweet'])) 
         print('Nível do Sentimento: ' +  str(tweet['polarity']))
+    
+    print('\n\nQuantidade de Tweets: ' + str(count_tweets()))
    
 
 def print_polarity_tweets_parameter(parameter):
+
+    count = 0
 
     for tweet in db.tweets.find({"parameter": parameter }):
         print('\n')
         print('Tweet: ' +  str(tweet['tweet'])) 
         print('Nível do Sentimento: ' +  str(tweet['polarity']))
+        count +=1
+    
+    print('\n\nQuantidade de Tweets: ' + str(count))
+
+def count_tweets():
+
+    count = 0
+
+    for tweet in db.tweets.find():
+        count +=1
+
+    return count
+
 
 
 main()
