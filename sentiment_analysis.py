@@ -21,12 +21,14 @@ def main():
   
     print('1 - Extrair Tweets e Realizar Análise Sentimental')   
     print('2 - Imprimir Tweets com Polaridade')   
-    print('3 - Busca por Parâmetro')  
+    print('3 - Busca Tweets por Parâmetro')  
     print('4 - Quantidade Total de Tweets')  
+    print('5 - Inserir Frase Manual e Realizar Análise Sentimental')
+    print('6 - Imprimir Frases com Polaridade')
     print('0 - Sair')
 
     op = int(input('Informe a Opção: '))
-
+    
     if(op == 1):
         quant_loops = int(input('Quantidade de Loops:'))
         parameter = input("Informe a Palavra: ")
@@ -46,6 +48,14 @@ def main():
       print('\n\nQuantidade Total de Tweets: ' + str(count_tweets())) 
       print('\n')
       main() 
+    elif(op == 5):
+      parameter = input("\nInforme a Frase: ")
+      polarity_of_manually_inserted_phrases(parameter)
+      main()
+      print('\n')
+    elif(op == 6):    
+      print_polarity_phrases()
+      main()    
     elif(op == 0):
       exit
     else:
@@ -111,6 +121,40 @@ def count_tweets():
 
     return count
 
+def polarity_of_manually_inserted_phrases(parameter):
 
+   analysis = tb(parameter)
+    
+   polarity = analysis.sentiment.polarity
+
+   db.phrases.insert_one({  
+                "phrase": parameter,                
+                "polarity" : polarity
+            })
+
+   print('\n')
+   print('Frase: ' +  str(parameter)) 
+   print('Nível do Sentimento: ' +  str(polarity))
+   print('\n')
+
+def print_polarity_phrases():
+
+    for phrase in db.phrases.find():
+        print('\n')        
+        print('Frase: ' +  str(phrase['phrase'])) 
+        print('Nível do Sentimento: ' +  str(phrase['polarity']))
+    
+    print('\n\nQuantidade de Frases: ' + str(count_phrases()))
+
+    print('\n')
+
+def count_phrases():
+
+    count = 0
+
+    for phrase in db.phrases.find():
+        count +=1
+
+    return count
 
 main()
