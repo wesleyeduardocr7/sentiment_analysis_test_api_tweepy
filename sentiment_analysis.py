@@ -25,6 +25,15 @@ def main():
     print('4 - Quantidade Total de Tweets')  
     print('5 - Inserir Frase Manual e Realizar Análise Sentimental')
     print('6 - Imprimir Frases com Polaridade')
+    print('7 - Tweet com Sentimento de Raiva')
+    print('8 - Tweet com Sentimento de Calmaria')
+    print('9 - Tweet com maior grau de Chateação')
+    print('10 - Tweet com maior grau de Calmaria')
+    print('11 - Frase com Sentimento de Raiva')
+    print('12 - Frase com Sentimento de Calmaria')
+    print('13 - Frase com maior grau de Chateação')
+    print('14 - Frase com maior grau de Calmaria')
+    
     print('0 - Sair')
 
     op = int(input('Informe a Opção: '))
@@ -35,35 +44,71 @@ def main():
         insert_tweets(quant_loops,parameter)
         print('Tweets extraídos com sucesso!\n')
         main()
+
     elif(op == 2):
        print_polarity_tweets()
        print('\n')
        main()
+
     elif(op == 3):
        parameter = input("Informe a Palavra: ")
        print_polarity_tweets_parameter(parameter)  
        print('\n')
        main() 
+
     elif(op == 4):
       print('\n\nQuantidade Total de Tweets: ' + str(count_tweets())) 
       print('\n')
       main() 
+
     elif(op == 5):
       parameter = input("\nInforme a Frase: ")
       polarity_of_manually_inserted_phrases(parameter)
       main()
       print('\n')
+
     elif(op == 6):    
       print_polarity_phrases()
-      main()    
+      main()  
+
+    elif(op == 7):    
+      tweet_with_angry_feeling()
+      main()  
+
+    elif(op == 8):    
+      tweet_with_feeling_of_calm()
+      main() 
+
+    elif(op == 9):    
+      tweeter_with_higher_degree_of_annoyance()
+      main()
+
+    elif(op == 10):    
+      tweeter_with_higher_degree_of_calm()
+      main()
+
+    elif(op == 11):    
+      phrase_with_angry_feeling()
+      main()  
+
+    elif(op == 12):    
+      phrase_with_feeling_of_calm()
+      main() 
+
+    elif(op == 13):    
+      phrase_with_higher_degree_of_annoyance()
+      main()
+
+    elif(op == 14):    
+      phrase_with_higher_degree_of_calm()
+      main()  
+                 
     elif(op == 0):
       exit
     else:
         print('\nOpção Incorreta\n')
         main()
-        
-
-
+  
 def insert_tweets(quant_loops, search_parameter):    
 
     count = 0
@@ -157,4 +202,106 @@ def count_phrases():
 
     return count
 
+def tweet_with_angry_feeling():
+
+    print('\n')
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] < 0 ):
+            print('Tweet: ' +  str(tweet['tweet'])) 
+            print('Nível do Sentimento: ' +  str(tweet['polarity']))
+            print('\n')
+
+def tweet_with_feeling_of_calm():
+
+    print('\n')
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] > 0 ):
+            print('Tweet: ' +  str(tweet['tweet'])) 
+            print('Nível do Sentimento: ' +  str(tweet['polarity']))
+            print('\n')
+
+def tweeter_with_higher_degree_of_annoyance():
+
+    lower_value = 0
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] < lower_value ):
+            lower_value = tweet['polarity']
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] == lower_value):
+            print('\nTweet: ' +  str(tweet['tweet'])) 
+            print('Nível do Sentimento: ' +  str(tweet['polarity']))   
+    
+    print('\n')
+
+def tweeter_with_higher_degree_of_calm():
+
+    highest_value = 0
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] > highest_value ):
+            highest_value = tweet['polarity']
+
+    for tweet in db.tweets.find():
+        if(tweet['polarity'] == highest_value):
+            print('\nTweet: ' +  str(tweet['tweet'])) 
+            print('Nível do Sentimento: ' +  str(tweet['polarity']))   
+    
+    print('\n')
+
+
+
+def phrase_with_angry_feeling():
+
+    print('\n')
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] < 0 ):
+            print('Frase: ' +  str(phrase['phrase'])) 
+            print('Nível do Sentimento: ' +  str(phrase['polarity']))
+            print('\n')
+
+def phrase_with_feeling_of_calm():
+
+    print('\n')
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] > 0 ):
+            print('Frase: ' +  str(phrase['phrase'])) 
+            print('Nível do Sentimento: ' +  str(phrase['polarity']))
+            print('\n')
+
+def phrase_with_higher_degree_of_annoyance():
+
+    lower_value = 0
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] < lower_value ):
+            lower_value = phrase['polarity']
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] == lower_value):
+            print('\nFrase: ' +  str(phrase['phrase'])) 
+            print('Nível do Sentimento: ' +  str(phrase['polarity']))   
+    
+    print('\n')
+
+def phrase_with_higher_degree_of_calm():
+
+    highest_value = 0
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] > highest_value ):
+            highest_value = phrase['polarity']
+
+    for phrase in db.phrases.find():
+        if(phrase['polarity'] == highest_value):
+            print('\nFrase: ' +  str(phrase['phrase'])) 
+            print('Nível do Sentimento: ' +  str(phrase['polarity']))   
+    
+    print('\n')
+  
 main()
